@@ -21,18 +21,15 @@ class RegisterUserTest extends TestCase
 
     public function setUp() : void {
         parent::setUp();
-
-        Event::fake([
-            RegisterUserEvent::class,
-        ]);
-
-        Queue::fake();
-
+        // Event::fake([
+        //     RegisterUserEvent::class,
+        // ]);
+        // Queue::fake();
         Mail::fake();
     }
 
-    public function test_if_email_sent_after_user_registered() {
-        // $this->withoutExceptionHandling();
+    public function test_email_sent_after_user_registered() {
+        $this->withoutExceptionHandling();
         $user = User::factory()->make();
 
         $response = $this->json(
@@ -46,8 +43,9 @@ class RegisterUserTest extends TestCase
                 ],
         );
 
-        Event::assertDispatched(RegisterUserEvent::class);
-        Queue::assertPushed(SendWelcomeEmailJob::class);
+        // Event::assertDispatched(RegisterUserEvent::class);
+        // Queue::assertPushedOn('emails', SendWelcomeEmailJob::class);
+
         Mail::assertSent(WelcomeEmail::class);
         $response->assertStatus(302);
 

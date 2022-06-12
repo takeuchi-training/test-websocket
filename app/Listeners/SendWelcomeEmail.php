@@ -29,6 +29,6 @@ class SendWelcomeEmail
     public function handle($event)
     {
         $user = $event->user;
-        dispatch(new SendWelcomeEmailJob($user->email));
+        dispatch(new SendWelcomeEmailJob($user->email))->onQueue('emails');
     }
 }
