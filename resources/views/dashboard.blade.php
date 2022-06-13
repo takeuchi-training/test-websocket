@@ -11,7 +11,20 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     You're logged in!
                 </div>
+                <div id="div-data"></div>
             </div>
         </div>
     </div>
+    
+    
+
+    <script src='./js/app.js'></script>
+
+    <script>
+        window.Echo.channel('event-triggered')
+                .listen('GetRequestEvent', (e) => {
+            console.log(e);
+            $('#div-data').text(e.message);
+        })
+    </script>
 </x-app-layout>

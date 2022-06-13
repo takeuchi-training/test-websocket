@@ -21,14 +21,13 @@ class RegisterUserTest extends TestCase
 
     public function setUp() : void {
         parent::setUp();
-        // Event::fake([
-        //     RegisterUserEvent::class,
-        // ]);
-        // Queue::fake();
-        Mail::fake();
     }
 
-    public function test_email_sent_after_user_registered() {
+    public function test_event_is_dispatched_after_user_registered() {
+        Event::fake([
+            RegisterUserEvent::class,
+        ]);
+
         $this->withoutExceptionHandling();
         $user = User::factory()->make();
 
@@ -43,8 +42,43 @@ class RegisterUserTest extends TestCase
                 ],
         );
 
-        // Event::assertDispatched(RegisterUserEvent::class);
-        // Queue::assertPushedOn('emails', SendWelcomeEmailJob::class);
+        Event::assertDispatched(RegisterUserEvent::class);
+    }
+
+    public function test_job_is_pushed_after_user_registered() {
+        Queue::fake();
+        $this->withoutExceptionHandling();
+        $user = User::factory()->make();
+
+        $response = $this->json(
+            $method = 'POST',
+            $uri = '/register',
+            $data = [
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'password' => 'Test@123',
+                    'password_confirmation' => 'Test@123',
+                ],
+        );
+
+        Queue::assertPushedOn('emails', SendWelcomeEmailJob::class);
+    }
+
+    public function test_email_is_sent_after_user_registered() {
+        Mail::fake();
+        $this->withoutExceptionHandling();
+        $user = User::factory()->make();
+
+        $response = $this->json(
+            $method = 'POST',
+            $uri = '/register',
+            $data = [
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'password' => 'Test@123',
+                    'password_confirmation' => 'Test@123',
+                ],
+        );
 
         Mail::assertSent(WelcomeEmail::class);
         $response->assertStatus(302);

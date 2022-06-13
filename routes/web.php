@@ -1,5 +1,10 @@
 <?php
 
+use App\Events\GetRequestEvent;
+use App\Jobs\SendWelcomeEmailJob;
+use App\Mail\WelcomeEmail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +26,17 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/test-dispatch', function () {
+    $user = User::factory()->create();
+    SendWelcomeEmailJob::dispatchAfterResponse($user->email);
+    $user->delete();
+
+    return response('Test done!');
+});
+
 require __DIR__.'/auth.php';
+
+Route::get('/trigger/{data}', function ($data) {
+    echo "<p>You have sent $data.</p>";
+    event(new GetRequestEvent($data));
+});
