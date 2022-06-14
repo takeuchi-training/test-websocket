@@ -40,9 +40,8 @@
                   <form id="testForm" action="/test-websocket" method="post">
                     @csrf
                     <div class="mb-3">
-                        {{-- <label for="name" class="form-label">Name</label> --}}
                         <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
-                        <input type="hidden" class="form-control" id="id" name="id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -80,16 +79,16 @@
             e.preventDefault();
 
             axios.post('/api/test-websocket', {
-                name: $('[name=name]').val(),
+                user_id: $('[name=user_id]').val(),
                 message: $('[name=message]').val(),
             });
         });
 
-        window.Echo.private('private.chat.' + $('[name=id]').val())
-                .listen('.chat', (e) => {
-            console.log(e);
-            $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
-        })
+        window.Echo.private('private.chat.' + $('[name=user_id]').val())
+            .listen('.chat', (e) => {
+                console.log(e);
+                $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
+            })
     </script>
 </body>
 </html>
