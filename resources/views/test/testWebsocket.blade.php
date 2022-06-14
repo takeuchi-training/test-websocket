@@ -1,24 +1,3 @@
-{{-- <x-app-layout>
-    <div class="container">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Test WebSocket Input</h5>
-              <form action="/test-websocket" method="post">
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                  </div>
-                  <button class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
-    </div>
-</x-app-layout> --}}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,11 +20,7 @@
                     @csrf
                     <div class="mb-3">
                         <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
-<<<<<<< HEAD
                         <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
-=======
-                        <input type="hidden" class="form-control" id="id" name="id" value="{{ auth()->user()->id }}">
->>>>>>> e2725b59e82980350908885bff9df88cb4871f01
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -88,19 +63,11 @@
             });
         });
 
-<<<<<<< HEAD
         window.Echo.private('private.chat.' + $('[name=user_id]').val())
             .listen('.chat', (e) => {
                 console.log(e);
                 $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
             })
-=======
-        window.Echo.private('private.chat.' + $('[name=id]').val())
-                .listen('.chat', (e) => {
-            console.log(e);
-            $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
-        })
->>>>>>> e2725b59e82980350908885bff9df88cb4871f01
     </script>
 </body>
 </html>
