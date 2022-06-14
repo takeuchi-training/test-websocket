@@ -37,4 +37,8 @@ class SendMessageEvent implements ShouldBroadcast
     {
         return new Channel('send-messages');
     }
+
+    public function broadcastAs() {
+        return 'chat';
+    }
 }

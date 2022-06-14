@@ -40,8 +40,8 @@
                   <form id="testForm" action="/test-websocket" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="">
+                        {{-- <label for="name" class="form-label">Name</label> --}}
+                        <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -85,7 +85,7 @@
         });
 
         window.Echo.channel('send-messages')
-                .listen('SendMessageEvent', (e) => {
+                .listen('.chat', (e) => {
             console.log(e);
             $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
         })

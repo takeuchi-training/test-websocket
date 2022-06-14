@@ -45,7 +45,7 @@ Route::get('/trigger/{data}', function ($data) {
 
 Route::get('/test-websocket', function () {
     return view('test.testWebsocket');
-});
+})->middleware(['auth'])->name('testWebsocket');
 
 Route::post('/test-websocket', function (Request $request) {
     $input = $request->validate([
