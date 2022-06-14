@@ -41,7 +41,11 @@
                     @csrf
                     <div class="mb-3">
                         <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
+<<<<<<< HEAD
                         <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
+=======
+                        <input type="hidden" class="form-control" id="id" name="id" value="{{ auth()->user()->id }}">
+>>>>>>> e2725b59e82980350908885bff9df88cb4871f01
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -84,11 +88,19 @@
             });
         });
 
+<<<<<<< HEAD
         window.Echo.private('private.chat.' + $('[name=user_id]').val())
             .listen('.chat', (e) => {
                 console.log(e);
                 $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
             })
+=======
+        window.Echo.private('private.chat.' + $('[name=id]').val())
+                .listen('.chat', (e) => {
+            console.log(e);
+            $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
+        })
+>>>>>>> e2725b59e82980350908885bff9df88cb4871f01
     </script>
 </body>
 </html>
