@@ -1,9 +1,11 @@
 <?php
 
 use App\Events\GetRequestEvent;
+use App\Events\SendMessageEvent;
 use App\Jobs\SendWelcomeEmailJob;
 use App\Mail\WelcomeEmail;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -39,4 +41,19 @@ require __DIR__.'/auth.php';
 Route::get('/trigger/{data}', function ($data) {
     echo "<p>You have sent $data.</p>";
     event(new GetRequestEvent($data));
+});
+
+Route::get('/test-websocket', function () {
+    return view('test.testWebsocket');
+});
+
+Route::post('/test-websocket', function (Request $request) {
+    $input = $request->validate([
+        'name' => 'required',
+        'message' => 'required'
+    ]);
+
+    event(new SendMessageEvent($input['name'], $input['message']));
+
+    return back();
 });

@@ -11,20 +11,26 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     You're logged in!
                 </div>
-                <div id="div-data"></div>
+                <div id="div-data" class="p-3"></div>
             </div>
         </div>
     </div>
     
-    
-
     <script src='./js/app.js'></script>
 
-    <script>
+    {{-- <script>
         window.Echo.channel('event-triggered')
                 .listen('GetRequestEvent', (e) => {
             console.log(e);
-            $('#div-data').text(e.message);
+            $('#div-data').append("<p>" + e.message + "</p>");
+        })
+    </script> --}}
+
+    <script>
+        window.Echo.channel('send-messages')
+                .listen('SendMessageEvent', (e) => {
+            console.log(e);
+            $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
         })
     </script>
 </x-app-layout>
