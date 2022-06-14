@@ -59,14 +59,14 @@
             e.preventDefault();
 
             axios.post('/api/test-websocket', {
-                name: $('[name=user_id]').val(),
+                user_id: $('[name=user_id]').val(),
                 message: $('[name=message]').val(),
             });
         });
 
         window.Echo.join('presence.chat.' + $('[name=user_id]').val())
             .here((users) => {
-                //
+                console.log(users);
             })
             .joining((user) => {
                 console.log(user.name);
