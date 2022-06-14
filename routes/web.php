@@ -57,3 +57,7 @@ Route::post('/test-websocket', function (Request $request) {
 
     return back();
 });
+
+Route::get('/receive-message', function () {
+    return view('test.receiveMessage');
+});
