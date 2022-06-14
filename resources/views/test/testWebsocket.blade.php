@@ -59,11 +59,11 @@
             });
         });
 
-        window.Echo.channel('public.chat')
-              .listen('.chat', (e) => {
-                  console.log(e);
-                  $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
-              })
+        window.Echo.private('private.chat.' + $('[name=user_id]').val())
+            .listen('.chat', (e) => {
+                console.log(e);
+                $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
+            })
     </script>
 </body>
 </html>

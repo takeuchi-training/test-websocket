@@ -30,5 +30,8 @@ Route::post('/test-websocket', function (Request $request) {
 
     event(new SendMessageEvent($user, $input['message']));
 
-    return $input;
+    return [
+        'response' => $input,
+        'user' => $user
+    ];
 });
