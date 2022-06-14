@@ -42,6 +42,7 @@
                     <div class="mb-3">
                         {{-- <label for="name" class="form-label">Name</label> --}}
                         <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
+                        <input type="hidden" class="form-control" id="id" name="id" value="{{ auth()->user()->id }}">
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -84,7 +85,7 @@
             });
         });
 
-        window.Echo.channel('send-messages')
+        window.Echo.private('private.chat.' + $('[name=id]').val())
                 .listen('.chat', (e) => {
             console.log(e);
             $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
