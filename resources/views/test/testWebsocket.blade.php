@@ -65,15 +65,15 @@
         });
 
         // window.Echo.join('presence.chat.' + $('[name=user_id]').val())
-        window.Echo.join('presence.chat.1')
+        window.Echo.join('presence.chat.18')
             .here((users) => {
                 console.log(users);
             })
             .joining((user) => {
-                console.log(user.name);
+                console.log("Joining: " + user.name);
             })
             .leaving((user) => {
-                console.log(user.name);
+                console.log("Leaving: " + user.name);
             })
             .error((error) => {
                 console.error(error);
