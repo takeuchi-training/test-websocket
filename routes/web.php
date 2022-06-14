@@ -38,26 +38,6 @@ Route::get('/test-dispatch', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/trigger/{data}', function ($data) {
-    echo "<p>You have sent $data.</p>";
-    event(new GetRequestEvent($data));
-});
-
 Route::get('/test-websocket', function () {
     return view('test.testWebsocket');
-});
-
-Route::post('/test-websocket', function (Request $request) {
-    $input = $request->validate([
-        'name' => 'required',
-        'message' => 'required'
-    ]);
-
-    event(new SendMessageEvent($input['name'], $input['message']));
-
-    return back();
-});
-
-Route::get('/receive-message', function () {
-    return view('test.receiveMessage');
-});
+})->middleware(['auth'])->name('testWebsocket');
