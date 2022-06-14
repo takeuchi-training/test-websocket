@@ -64,7 +64,8 @@
             });
         });
 
-        window.Echo.join('presence.chat.' + $('[name=user_id]').val())
+        // window.Echo.join('presence.chat.' + $('[name=user_id]').val())
+        window.Echo.join('presence.chat.1')
             .here((users) => {
                 console.log(users);
             })
