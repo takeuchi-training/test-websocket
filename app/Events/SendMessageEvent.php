@@ -31,11 +31,11 @@ class SendMessageEvent implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\PrivateChannel|array
+     * @return \Illuminate\Broadcasting\PresenceChannel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private.chat.'.$this->user->id);
+        return new PresenceChannel('presence.chat.'.$this->user->id);
     }
 
     public function broadcastAs() {

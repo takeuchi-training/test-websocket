@@ -59,7 +59,20 @@
             });
         });
 
-        window.Echo.private('private.chat.' + $('[name=user_id]').val())
+        // window.Echo.join('presence.chat.' + $('[name=user_id]').val())
+        window.Echo.join('presence.chat.1')
+            .here((users) => {
+                console.log(users);
+            })
+            .joining((user) => {
+                console.log("Joining: " + user.name);
+            })
+            .leaving((user) => {
+                console.log("Leaving: " + user.name);
+            })
+            .error((error) => {
+                console.error(error);
+            })
             .listen('.chat', (e) => {
                 console.log(e);
                 $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
