@@ -60,7 +60,7 @@
         });
 
         // window.Echo.join('presence.chat.' + $('[name=user_id]').val())
-        window.Echo.join('presence.chat.1')
+        window.Echo.join('presence.group.chat')
             .here((users) => {
                 console.log(users);
             })

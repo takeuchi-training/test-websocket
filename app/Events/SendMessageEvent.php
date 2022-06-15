@@ -35,7 +35,7 @@ class SendMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('presence.chat.'.$this->user->id);
+        return new PresenceChannel('presence.group.chat');
     }
 
     public function broadcastAs() {
