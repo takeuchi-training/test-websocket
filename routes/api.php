@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\SendMessageEvent;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,11 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/test-websocket', function (Request $request) {
     $input = $request->validate([
-        'name' => 'required',
+        'user_id' => 'required',
         'message' => 'required'
     ]);
+    
+    $user = User::find($input['user_id']);
 
-    event(new SendMessageEvent($input['name'], $input['message']));
+    event(new SendMessageEvent($user, $input['message']));
 
     return $input;
 });

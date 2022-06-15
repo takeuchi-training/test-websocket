@@ -1,24 +1,3 @@
-{{-- <x-app-layout>
-    <div class="container">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Test WebSocket Input</h5>
-              <form action="/test-websocket" method="post">
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                  </div>
-                  <button class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
-    </div>
-</x-app-layout> --}}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,11 +19,7 @@
                   <form id="testForm" action="/test-websocket" method="post">
                     @csrf
                     <div class="mb-3">
-                        {{-- <label for="name" class="form-label">Name</label> --}}
-                        <input type="hidden" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}">
-                        @error('name')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                        <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
                       </div>
                       <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
@@ -79,16 +54,16 @@
             e.preventDefault();
 
             axios.post('/api/test-websocket', {
-                name: $('[name=name]').val(),
+                user_id: $('[name=user_id]').val(),
                 message: $('[name=message]').val(),
             });
         });
 
-        window.Echo.channel('send-messages')
-                .listen('.chat', (e) => {
-            console.log(e);
-            $('#div-data').append("<p><strong>" + e.name + ":</strong> " + e.message + "</p>");
-        })
+        window.Echo.channel('public.chat')
+              .listen('.chat', (e) => {
+                  console.log(e);
+                  $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
+              })
     </script>
 </body>
 </html>
