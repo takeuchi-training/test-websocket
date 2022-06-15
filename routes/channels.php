@@ -18,7 +18,14 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('presence.group.chat', function ($user) {
-    if ($user->id === 18) {
+    $adminEmails = [
+        'giangnhattruong@gmail.com',
+        'admin1@admin.com',    
+        'admin2@admin.com',    
+        'admin3@admin.com',    
+    ];
+
+    if (in_array($user->email, $adminEmails)) {
         return [ 'id' => $user->id, 'name' => $user->name, 'email' => $user->email ];
     }
 
