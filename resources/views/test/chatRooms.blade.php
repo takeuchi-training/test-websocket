@@ -22,12 +22,18 @@
                     <ul class="list-group list-group-flush">
                       @if ($rooms !== null)
                           @foreach ($rooms as $room)
-                          <li class="list-group-item d-flex justify-content-between">{{ $room->name }}
-                            <a href="/test-websocket/{{ $room->id }}" class="btn btn-sm btn-primary position-relative">
-                                Inbox
-                                <span class="badge bg-danger">4</span>
-                                </span>
-                              </a>
+                          <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                              <p>{{ $room->name }}</p>
+                              <a href="/test-websocket/{{ $room->id }}" class="btn btn-sm btn-primary position-relative">
+                                  Inbox
+                                  <span class="badge bg-danger">4</span>
+                                  </span>
+                                </a>
+                            </div>
+                          <small>Group's users: {{ $roomUsers->filter(function($usersroom) use($room) {
+                            return $usersroom->room_id === $room->id;
+                          })->map(fn($user) => $user->name)->implode(', ') }}</small>
                           </li>
                           @endforeach
                       @endif
