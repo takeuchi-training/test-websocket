@@ -24,7 +24,7 @@
                           @foreach ($rooms as $room)
                           <li class="list-group-item">
                             <div class="d-flex justify-content-between">
-                              <p>{{ $room->name }}</p>
+                              <p><strong>{{ $room->name }}</strong></p>
                               <a href="/test-websocket/{{ $room->id }}" class="btn btn-sm btn-primary position-relative">
                                   Inbox
                                   <span class="badge bg-danger">4</span>
