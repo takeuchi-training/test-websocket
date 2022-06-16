@@ -85,4 +85,4 @@ Route::get('/chat-rooms', function (ChatRepositoryInterface $chatRepository) {
         'rooms' => $rooms,
         'roomUsers' => $roomUsers,
     ]);
-})->middleware(['auth']);
+})->middleware(['auth'])->name('chatRooms');
