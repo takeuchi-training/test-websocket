@@ -14,6 +14,7 @@ class SendMessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $room;
     public $user;
     public $message;
 
