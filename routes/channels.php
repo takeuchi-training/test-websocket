@@ -18,7 +18,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('presence.group.chat', function ($user) {
-    if ($user->id === 18) {
+    if ($user->id === 18 || $user->id === 19) {
         return [ 'id' => $user->id, 'name' => $user->name, 'email' => $user->email ];
     }
 
