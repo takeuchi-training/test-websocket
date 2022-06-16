@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Room;
+use App\Models\User;
+use App\Services\ChatServiceInterface;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +28,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('enter_room', function (User $user, $room_id) {
+            $chatService = app()->make(ChatServiceInterface::class);
+            return $chatService->isUserInGroupChat($room_id, $user->id);
+        });
     }
 }

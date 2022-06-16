@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -20,6 +21,7 @@
                     @csrf
                     <div class="mb-3">
                         <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" class="form-control" id="room_id" name="room_id" value="{{ $room_id }}">
                       </div>
                       <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
@@ -40,27 +42,33 @@
             <div class="card col col-lg-8 offset-lg-2">
                 <div class="card-body">
                   <h5 class="card-title">Messages</h5>
-                  <div id="div-data" class="p-3"></div>
+                  <div id="div-data" class="p-3">
+                  @if ($messages !== null)
+                      @foreach ($messages as $message)
+                      <p><strong>{{ $message->user_name }}:</strong> {{ $message->content }}</p>
+                      @endforeach
+                  @endif
+                </div>
                 </div>
               </div>
         </div>
     </div>
 
-    <script src='./js/app.js'></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script>
         let form = $('#testForm');
 
         $('#pushMessage').on('click', function(e) {
             e.preventDefault();
 
-            axios.post('/api/test-websocket', {
+            axios.post('/test-websocket/' + $('[name=room_id]').val(), {
                 user_id: $('[name=user_id]').val(),
                 message: $('[name=message]').val(),
             });
         });
 
         // window.Echo.join('presence.chat.' + $('[name=user_id]').val())
-        window.Echo.join('presence.group.chat')
+        window.Echo.join('presence.group.chat.' + $('[name=room_id]').val())
             .here((users) => {
                 console.log(users);
             })
@@ -75,7 +83,7 @@
             })
             .listen('.chat', (e) => {
                 console.log(e);
-                $('#div-data').append("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
+                $('#div-data').prepend("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
             })
     </script>
 </body>

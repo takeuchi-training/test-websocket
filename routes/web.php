@@ -5,7 +5,9 @@ use App\Events\SendMessageEvent;
 use App\Jobs\SendWelcomeEmailJob;
 use App\Mail\WelcomeEmail;
 use App\Models\User;
+use App\Repositories\ChatRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,46 @@ Route::get('/test-dispatch', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/test-websocket', function () {
-    return view('test.testWebsocket');
+Route::get('/test-websocket/{room_id}', function ($room_id, ChatRepositoryInterface $chatRepository) {
+    if (!Gate::allows('enter_room', $room_id)) {
+        abort(403);
+    }
+
+    $messages = $chatRepository->getGroupChatMessages($room_id);
+
+    return view('test.testWebsocket', [
+        'room_id' => $room_id,
+        'messages' => $messages
+    ]);
 })->middleware(['auth'])->name('testWebsocket');
+
+Route::post('/test-websocket/{room_id}', function (Request $request, ChatRepositoryInterface $chatRepository, $room_id) {
+    if (!Gate::allows('enter_room', $room_id)) {
+        abort(403);
+    }
+
+    $input = $request->validate([
+        'user_id' => 'required',
+        'message' => 'required'
+    ]);
+    
+    $user = User::find($input['user_id']);
+
+    $room = $chatRepository->getChatRoom($room_id);
+
+    event(new SendMessageEvent($room, $user, $input['message']));
+
+    return [
+        'response' => $input,
+        'user' => $user
+    ];
+})->middleware(['auth']);
+
+Route::get('/chat-rooms', function (ChatRepositoryInterface $chatRepository) {
+    $user = auth()->user();
+    $rooms = $chatRepository->getUserGroupChats($user->id);
+
+    return view('test.chatRooms', [
+        'rooms' => $rooms,
+    ]);
+})->middleware(['auth']);

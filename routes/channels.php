@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\ChatRepositoryInterface;
+use App\Services\ChatServiceInterface;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -17,15 +19,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('presence.group.chat', function ($user) {
-    $adminEmails = [
-        'giangnhattruong@gmail.com',
-        'admin1@gmail.com',    
-        'admin2@gmail.com',    
-        'admin3@gmail.com',    
-    ];
+Broadcast::channel('presence.group.chat.{room_id}', function ($user, $room_id) {
+    $chatService = app()->make(ChatServiceInterface::class);
 
-    if (in_array($user->email, $adminEmails)) {
+    if ($chatService->isUserInGroupChat($room_id, $user->id)) {
         return [ 'id' => $user->id, 'name' => $user->name, 'email' => $user->email ];
     }
 

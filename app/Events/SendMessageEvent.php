@@ -23,8 +23,9 @@ class SendMessageEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($user, $message)
+    public function __construct($room, $user, $message)
     {
+        $this->room = $room;
         $this->user = $user;
         $this->message = $message;
     }
@@ -36,7 +37,7 @@ class SendMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('presence.group.chat');
+        return new PresenceChannel('presence.group.chat.'.$this->room->id);
     }
 
     public function broadcastAs() {
