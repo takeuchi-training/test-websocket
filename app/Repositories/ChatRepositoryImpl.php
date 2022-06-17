@@ -38,13 +38,18 @@ class ChatRepositoryImpl implements ChatRepositoryInterface {
     }
 
     public function getUserGroupChatsWithUsers($user_id) {
-        return DB::table('room_user')
+        $rooms = DB::table('room_user')
         ->join('rooms', 'room_user.room_id', '=', 'rooms.id')
-        ->join('users', 'room_user.user_id', '=', 'users.id')
-        ->select('rooms.id', 'rooms.name', DB::raw("(GROUP_CONCAT(users.name SEPARATOR ', ')) as user_names"))
+        ->select('rooms.id', 'rooms.name')
         ->where('room_user.user_id', $user_id)
-        ->groupBy('rooms.id')
-        ->get();
+        ->distinct()->get();
+
+        return $rooms->map(fn($room) => $room->id);
+
+        DB::table('room_user')
+            ->join('users', 'users.id', '=', 'room_user.user_id')
+            ->select(DB:raw("GROUP_CONCAT(users.name SEPARATOR ', ') as user_names"))
+            ->get();
     }
 
     public function storeGroupChatMessage($room_id, $user_id, $content) {
