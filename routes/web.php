@@ -78,8 +78,11 @@ Route::post('/test-websocket/{room_id}', function (Request $request, ChatReposit
 Route::get('/chat-rooms', function (ChatRepositoryInterface $chatRepository) {
     $user = auth()->user();
     $rooms = $chatRepository->getUserGroupChats($user->id);
+    $roomIds = $rooms->map(fn($room) => $room->id);
+    $roomUsers = $chatRepository->getUserGroupChatsWithUsers($roomIds);
 
     return view('test.chatRooms', [
         'rooms' => $rooms,
+        'roomUsers' => $roomUsers,
     ]);
-})->middleware(['auth']);
+})->middleware(['auth'])->name('chatRooms');

@@ -11,4 +11,5 @@ interface ChatRepositoryInterface {
     public function getGroupChatUsers($room_id);
     public function getUserGroupChats($user_id);
     public function storeGroupChatMessage($room_id, $user_id, $content);
+    public function getUserGroupChatsWithUsers($roomIds);
 }

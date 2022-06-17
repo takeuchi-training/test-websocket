@@ -15,7 +15,7 @@ class ChatRepositoryImpl implements ChatRepositoryInterface {
         return DB::table('messages')
             ->join('users', 'messages.user_id', '=', 'users.id')
             ->join('rooms', 'messages.room_id', '=', 'rooms.id')
-            ->selectRaw('rooms.id as room_id, users.name as user_name, messages.content, messages.created_at')
+            ->selectRaw('rooms.id as room_id, users.name as user_name, messages.*')
             ->orderBy('messages.created_at', 'desc')
             ->where('rooms.id', $room_id)
             ->get();
@@ -23,33 +23,26 @@ class ChatRepositoryImpl implements ChatRepositoryInterface {
 
     public function getGroupChatUsers($room_id) {
         return DB::table('room_user')
-        ->join('users', 'room_user.user_id', '=', 'users.id')
-        ->select('room_user.room_id', 'users.id', 'users.name', 'users.email')
-        ->where('room_user.room_id', $room_id)
-        ->distinct()->get();
+            ->join('users', 'room_user.user_id', '=', 'users.id')
+            ->select('room_user.room_id', 'users.*')
+            ->where('room_user.room_id', $room_id)
+            ->distinct()->get();
     }
 
     public function getUserGroupChats($user_id) {
         return DB::table('room_user')
-        ->join('rooms', 'room_user.room_id', '=', 'rooms.id')
-        ->select('rooms.id', 'rooms.name')
-        ->where('room_user.user_id', $user_id)
-        ->distinct()->get();
+            ->join('rooms', 'room_user.room_id', '=', 'rooms.id')
+            ->select('rooms.*')
+            ->where('room_user.user_id', $user_id)
+            ->distinct()->get();
     }
 
-    public function getUserGroupChatsWithUsers($user_id) {
-        $rooms = DB::table('room_user')
-        ->join('rooms', 'room_user.room_id', '=', 'rooms.id')
-        ->select('rooms.id', 'rooms.name')
-        ->where('room_user.user_id', $user_id)
-        ->distinct()->get();
-
-        return $rooms->map(fn($room) => $room->id);
-
-        DB::table('room_user')
-            ->join('users', 'users.id', '=', 'room_user.user_id')
-            ->select(DB:raw("GROUP_CONCAT(users.name SEPARATOR ', ') as user_names"))
-            ->get();
+    public function getUserGroupChatsWithUsers($roomIds) {
+        return DB::table('room_user')
+            ->join('users', 'room_user.user_id', '=', 'users.id')
+            ->select('room_user.room_id', 'users.name', 'users.email')
+            ->whereIn('room_user.room_id', $roomIds)
+            ->distinct()->get();
     }
 
     public function storeGroupChatMessage($room_id, $user_id, $content) {
