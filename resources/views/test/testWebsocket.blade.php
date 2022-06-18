@@ -1,27 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-</head>
-<body>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Hi {{ auth()->user()->name }}!
+        </h2>
+    </x-slot>
+
     <div class="container">
         <div class="row p-5">
             <div class="card col col-lg-8 offset-lg-2">
                 <div class="card-body">
-                  <h5 class="card-title">Test WebSocket Input</h5>
+                  <h5 class="card-title">Room: {{ $room->name }}</h5>
                   <form id="testForm" action="/test-websocket" method="post">
                     @csrf
                     <div class="mb-3">
                         <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
-                        <input type="hidden" class="form-control" id="room_id" name="room_id" value="{{ $room_id }}">
+                        <input type="hidden" class="form-control" id="room_id" name="room_id" value="{{ $room->id }}">
                       </div>
                       <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
@@ -55,7 +48,8 @@
     </div>
 
     <script src="{{ asset('js/app.js') }}"></script>
-    <script>
+
+    <script defer>
         let form = $('#testForm');
 
         $('#pushMessage').on('click', function(e) {
@@ -86,5 +80,4 @@
                 $('#div-data').prepend("<p><strong>" + e.user.name + ":</strong> " + e.message + "</p>");
             })
     </script>
-</body>
-</html>
+</x-app-layout>

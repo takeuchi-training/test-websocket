@@ -45,10 +45,11 @@ Route::get('/test-websocket/{room_id}', function ($room_id, ChatRepositoryInterf
         abort(403);
     }
 
+    $room = $chatRepository->getChatRoom($room_id);
     $messages = $chatRepository->getGroupChatMessages($room_id);
 
     return view('test.testWebsocket', [
-        'room_id' => $room_id,
+        'room' => $room,
         'messages' => $messages
     ]);
 })->middleware(['auth'])->name('testWebsocket');
