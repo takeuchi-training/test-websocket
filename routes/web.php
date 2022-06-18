@@ -2,8 +2,11 @@
 
 use App\Events\GetRequestEvent;
 use App\Events\SendMessageEvent;
+use App\Http\Controllers\AdminApplicationController;
+use App\Http\Controllers\ApplicationController;
 use App\Jobs\SendWelcomeEmailJob;
 use App\Mail\WelcomeEmail;
+use App\Models\Application;
 use App\Models\User;
 use App\Repositories\ChatRepositoryInterface;
 use Illuminate\Http\Request;
@@ -87,3 +90,30 @@ Route::get('/chat-rooms', function (ChatRepositoryInterface $chatRepository) {
         'roomUsers' => $roomUsers,
     ]);
 })->middleware(['auth'])->name('chatRooms');
+
+Route::name('applications.')
+    ->prefix('/applications')
+    ->controller(ApplicationController::class)
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::prefix('/{application_id}')->group(function () {
+            Route::put('/', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+    });
+
+Route::name('admin.applications.')
+    ->prefix('/admin/applications')
+    ->controller(AdminApplicationController::class)
+    ->middleware(['auth', 'is_admin'])
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::prefix('/{application_id}')->group(function () {
+            Route::get('/', 'show')->name('show');
+            Route::post('/approve', 'approve')->name('approve');
+            Route::post('/deny', 'deny')->name('deny');
+        });
+    });
+
