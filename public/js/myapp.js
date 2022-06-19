@@ -1,3 +1,21 @@
+function formatDatetime($datetimeString) {
+	const datetime = new Date($datetimeString);
+
+	return (
+		String(datetime.getFullYear()) +
+		'-' +
+		String(datetime.getMonth()).padStart(2, '0') +
+		'-' +
+		String(datetime.getDate()).padStart(2, '0') +
+		' ' +
+		String(datetime.getHours()).padStart(2, '0') +
+		':' +
+		String(datetime.getMinutes()).padStart(2, '0') +
+		':' +
+		String(datetime.getSeconds()).padStart(2, '0')
+	);
+}
+
 // window.Echo.private('App.Models.User.' + $('input[name=userId]').val())
 //     .notification((notification) => {
 //         console.log("Fuck you!");
@@ -33,7 +51,7 @@ window.Echo
 				'</a>' +
 				'</div>' +
 				'<small>created at ' +
-				e.application.created_at +
+				formatDatetime(e.application.created_at) +
 				'</small>' +
 				'</div>' +
 				'<strong>From employee: ' +

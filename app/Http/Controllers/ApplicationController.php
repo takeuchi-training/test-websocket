@@ -37,12 +37,12 @@ class ApplicationController extends Controller
         $admins = User::where('department_id', auth()->user()->department_id)
             ->where('is_admin', 1)
             ->get();
+            
+        event(new NewApplicationEvent(auth()->user(), $application));
 
         foreach ($admins as $admin) {
             $admin->notify(new NewApplicationNotification($application, auth()->user(), $admin));
         }
-
-        event(new NewApplicationEvent(auth()->user(), $application));
 
         return redirect()->route('applications.index');
     }
