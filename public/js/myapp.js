@@ -34,6 +34,10 @@ $('#notificationBell').on('click', function() {
 	$('#newApplicationList').slideToggle(50);
 });
 
+$('button').on('click', function() {
+	$(this).addClass('disabled');
+});
+
 // window.Echo.private('App.Models.User.' + $('input[name=userId]').val())
 //     .notification((notification) => {
 //         console.log("Fuck you!");
