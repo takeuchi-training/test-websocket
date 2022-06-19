@@ -18,12 +18,14 @@ function formatDatetime($datetimeString) {
 
 function changeBellColor() {
 	if ($('#newApplicationList').find('.new-application').length === 0) {
-		$('#notificationBell').removeClass('text-danger');
+		// $('#notificationBell').removeClass('shake-the-bell');
+		$('#notificationBell').removeClass('text-danger h5');
 		$('#notificationBell').addClass('text-secondary');
 		$('#newApplicationList .no-items').removeClass('d-none');
 	} else {
+		// $('#notificationBell').addClass('shake-the-bell');
 		$('#notificationBell').removeClass('text-secondary');
-		$('#notificationBell').addClass('text-danger');
+		$('#notificationBell').addClass('text-danger h5');
 		$('#newApplicationList .no-items').addClass('d-none');
 	}
 }
