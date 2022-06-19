@@ -44,7 +44,7 @@ class AdminApplicationController extends Controller
             ->first();
 
         if ($application === null) {
-            abort(403);
+            return redirect()->route('admin.applications.index');
         }
 
         return view('applications.admin.show', [
