@@ -25,6 +25,10 @@
                     <x-nav-link :href="route('admin.applications.index')" :active="request()->routeIs('admin.applications.index')">
                         {{ __('Manage Applications') }}
                     </x-nav-link>
+                    @auth
+                        <input type="hidden" name="userId" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="departmentId" value="{{ auth()->user()->department_id }}">
+                    @endauth
                     @endif
                 </div>
             </div>

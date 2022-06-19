@@ -10,7 +10,7 @@
             <div class="card col col-lg-8 offset-lg-2">
                 <div class="card-body">
                   <h5 class="card-title">Applications</h5>
-                  <div id="div-data" class="p-3">
+                  <div id="adminApplications" class="p-3">
                   @if ($applications !== null)
                       @foreach ($applications as $key => $application)
 

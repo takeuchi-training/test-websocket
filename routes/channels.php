@@ -28,3 +28,15 @@ Broadcast::channel('presence.group.chat.{room_id}', function ($user, $room_id) {
 
     return null;
 });
+
+Broadcast::channel('admin.department.{departmentId}', function($user, $departmentId) {
+    if ($user->department_id == $departmentId && $user->is_admin === 1) {
+        return [ 
+            'id' => $user->id, 
+            'name' => $user->name, 
+            'email' => $user->email
+        ];
+    }
+
+    return null;
+});

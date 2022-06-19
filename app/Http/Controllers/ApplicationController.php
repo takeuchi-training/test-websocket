@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewApplicationEvent;
 use App\Models\Application;
+use App\Models\User;
+use App\Notifications\NewApplicationNotification;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class ApplicationController extends Controller
 {
@@ -24,11 +28,21 @@ class ApplicationController extends Controller
             'content' => 'required|string',
         ]);
 
-        Application::create([
+        $application = Application::create([
             'title' => $newApplication['title'],
             'content' => $newApplication['content'],
             'user_id' => auth()->user()->id,
         ]);
+
+        $admins = User::where('department_id', auth()->user()->department_id)
+            ->where('is_admin', 1)
+            ->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new NewApplicationNotification($application, auth()->user(), $admin));
+        }
+
+        event(new NewApplicationEvent(auth()->user(), $application));
 
         return redirect()->route('applications.index');
     }
