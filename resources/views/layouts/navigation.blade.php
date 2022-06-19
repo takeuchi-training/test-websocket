@@ -1,3 +1,20 @@
+@php
+    $user = auth()->user();
+    if ($user !== null && $user->is_admin === 1) {
+        $newApplications = Illuminate\Support\Facades\DB::table('departments')
+                ->join('users', 'users.department_id', '=', 'departments.id')
+                ->join('applications', 'applications.user_id', '=', 'users.id')
+                ->selectRaw('applications.id, applications.title, '
+                        .'users.name as user_name, '
+                        .'departments.id as department_id, '
+                        .'applications.status, applications.created_at')
+                ->where('departments.id', $user->department_id)
+                ->where('applications.status', 0)
+                ->orderBy('applications.created_at', 'desc')
+                ->get();
+    }
+@endphp
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +52,9 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <i id="notification" class="bi bi-bell-fill text-secondary me-3"></i>
+                @if ($user !== null && $user->is_admin === 1)
+                <i id="notificationBell" class="bi bi-bell-fill text-secondary me-3"></i>
+                @endif
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -111,4 +130,18 @@
             </div>
         </div>
     </div>
+
+    @if ($user !== null && $user->is_admin === 1)
+    <div id="newApplicationList" class="list-group" style="display: none">
+        @foreach ($newApplications as $newApplication)
+        <div class="new-application list-group-item list-group-item-action d-flex flex-column">
+            <a href="{{ url('/admin/applications/' . $newApplication->id) }}" class="">{{ $newApplication->user_name }} just submitted {{ $newApplication->title }} application</a>
+            <small>- {{ $newApplication->created_at }}</small>
+        </div>
+        @endforeach
+        <div class="no-items list-group-item list-group-item-action d-flex flex-column d-none">
+            <small>There are no new applications</small>
+        </div>
+      </div>
+    @endif
 </nav>

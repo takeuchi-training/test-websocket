@@ -16,6 +16,24 @@ function formatDatetime($datetimeString) {
 	);
 }
 
+function changeBellColor() {
+	if ($('#newApplicationList').find('.new-application').length === 0) {
+		$('#notificationBell').removeClass('text-danger');
+		$('#notificationBell').addClass('text-secondary');
+		$('#newApplicationList .no-items').removeClass('d-none');
+	} else {
+		$('#notificationBell').removeClass('text-secondary');
+		$('#notificationBell').addClass('text-danger');
+		$('#newApplicationList .no-items').addClass('d-none');
+	}
+}
+
+changeBellColor();
+
+$('#notificationBell').on('click', function() {
+	$('#newApplicationList').slideToggle(50);
+});
+
 // window.Echo.private('App.Models.User.' + $('input[name=userId]').val())
 //     .notification((notification) => {
 //         console.log("Fuck you!");
@@ -59,4 +77,22 @@ window.Echo
 				'</strong>' +
 				'<hr>'
 		);
+
+		$('#newApplicationList').prepend(
+			'<div class="new-application list-group-item list-group-item-action d-flex flex-column">' +
+				'<a href="http://' +
+				window.location.host +
+				'/admin/applications/' +
+				e.application.id +
+				'" class="">' +
+				e.user.name +
+				' just submitted ' +
+				e.application.title +
+				' application</a>' +
+				'<small>- ' +
+				formatDatetime(e.application.created_at) +
+				'</div>'
+		);
+
+		changeBellColor();
 	});
