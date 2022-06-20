@@ -52,9 +52,22 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                @if ($user !== null && $user->is_admin === 1)
-                <i id="notificationBell" class="bi bi-bell-fill text-secondary me-3"></i>
-                @endif
+                <div id="notification">
+                    <i id="notificationBell" class="bi bi-bell-fill text-secondary me-3"></i>
+                    @if ($user !== null && $user->is_admin === 1)
+                    <div id="newApplicationList" class="list-group" style="display: none; width: 450px">
+                        @foreach ($newApplications as $newApplication)
+                        <div class="new-application list-group-item list-group-item-action d-flex flex-column">
+                            <a href="{{ url('/admin/applications/' . $newApplication->id) }}" class="">{{ $newApplication->user_name }} just submitted {{ $newApplication->title }} application</a>
+                            <small>- {{ $newApplication->created_at }}</small>
+                        </div>
+                        @endforeach
+                        <div class="no-items list-group-item list-group-item-action d-flex flex-column d-none">
+                            <small>There are no new applications</small>
+                        </div>
+                    </div>
+                    @endif
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -130,18 +143,4 @@
             </div>
         </div>
     </div>
-
-    @if ($user !== null && $user->is_admin === 1)
-    <div id="newApplicationList" class="list-group" style="display: none">
-        @foreach ($newApplications as $newApplication)
-        <div class="new-application list-group-item list-group-item-action d-flex flex-column">
-            <a href="{{ url('/admin/applications/' . $newApplication->id) }}" class="">{{ $newApplication->user_name }} just submitted {{ $newApplication->title }} application</a>
-            <small>- {{ $newApplication->created_at }}</small>
-        </div>
-        @endforeach
-        <div class="no-items list-group-item list-group-item-action d-flex flex-column d-none">
-            <small>There are no new applications</small>
-        </div>
-      </div>
-    @endif
 </nav>

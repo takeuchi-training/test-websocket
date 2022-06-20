@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
             'department_id' => 3
         ]);
 
-        Application::factory(18)->create();
+        Application::factory(9)->create();
         Room::factory(7)->create();
         RoomUser::factory(60)->create();
         Message::factory(90)->create();
